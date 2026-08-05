@@ -380,9 +380,6 @@ button {
   .layout {
     grid-template-columns: 1fr;
   }
-  .stats-bar {
-    grid-template-columns: repeat(2, 1fr);
-  }
   .application-card {
     flex-direction: column;
   }
