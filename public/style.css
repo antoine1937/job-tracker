@@ -1,0 +1,392 @@
+:root {
+  --bg: #f4f6f8;
+  --card-bg: #ffffff;
+  --text-dark: #1a2b3c;
+  --text-muted: #64748b;
+  --accent: #2b6cb0;
+  --border: #e2e8f0;
+  --radius: 14px;
+  --shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+
+  --status-a-postuler: #64748b;
+  --status-envoyee: #2b6cb0;
+  --status-entretien: #b7791f;
+  --status-refusee: #c53030;
+  --status-offre: #2f855a;
+
+  /* Version pastel des memes statuts, utilisee uniquement pour la barre :
+     les couleurs "pleines" ci-dessus restent utilisees pour les badges
+     (texte blanc dessus, donc besoin de couleurs assez saturees pour
+     rester lisibles). */
+  --status-a-postuler-pastel: #cbd5e0;
+  --status-envoyee-pastel: #90cdf4;
+  --status-entretien-pastel: #fbd38d;
+  --status-refusee-pastel: #feb2b2;
+  --status-offre-pastel: #9ae6b4;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text-dark);
+  padding: 24px;
+}
+
+.app {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.app-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.app-header h1 {
+  font-size: 1.8rem;
+}
+
+.subtitle {
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.stats-band {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 18px 20px;
+  margin-bottom: 24px;
+}
+
+/* La piste : une barre "pilule" avec overflow:hidden, pour que les segments
+   qu'on empile dedans (voir .segment) ressortent comme une seule forme
+   arrondie continue, plutot que 5 blocs separes. */
+.stats-bar-track {
+  display: flex;
+  height: 16px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: var(--border);
+}
+
+.segment {
+  height: 100%;
+  width: 0; /* la largeur cible est appliquee juste apres par le JS, ce qui declenche la transition */
+  background: var(--seg-color, var(--accent));
+  transition: width 1.4s ease;
+}
+
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.9) translateY(4px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.stats-legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+/* Chaque statut devient un petit badge (fond teinté + bordure de sa
+   couleur) au lieu d'un simple point discret : plus facile à repérer
+   d'un coup d'oeil, et ça fait le lien visuel avec les segments de la
+   barre juste au-dessus. */
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--dot-color, var(--text-dark));
+  background: color-mix(in srgb, var(--dot-color, var(--accent)) 12%, var(--card-bg));
+  border: 1px solid color-mix(in srgb, var(--dot-color, var(--accent)) 35%, var(--card-bg));
+  border-radius: 999px;
+  padding: 6px 14px 6px 10px;
+  /* opacity/transform de depart pour l'animation d'entree, voir @keyframes popIn.
+     La duree est volontairement longue (0.7s) pour que ce soit bien visible,
+     pas juste un micro-flash qu'on rate en clignant des yeux. */
+  animation: popIn 0.7s ease both;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.legend-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--dot-color, var(--accent));
+  flex-shrink: 0;
+}
+
+.legend-item strong {
+  font-size: 0.95rem;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+.form-card,
+.list-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 20px;
+}
+
+.form-card h2,
+.list-header h2 {
+  font-size: 1.1rem;
+  margin-bottom: 14px;
+}
+
+#application-form {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+#application-form label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-top: 10px;
+}
+
+#application-form input,
+#application-form select,
+#application-form textarea {
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-family: inherit;
+  outline: none;
+}
+
+#application-form input:focus,
+#application-form select:focus,
+#application-form textarea:focus {
+  border-color: var(--accent);
+}
+
+.form-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 10px 16px;
+  font-family: inherit;
+}
+
+#submit-btn {
+  background: var(--accent);
+  color: white;
+  /* Une bordure de la couleur d'accent, invisible tant que le fond est
+     lui-même --accent, mais qui devient visible au survol quand le fond
+     passe au blanc — sinon le bouton se fondrait dans la carte blanche
+     derrière lui. */
+  border: 2px solid var(--accent);
+  flex: 1;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+#submit-btn:hover {
+  background: white;
+  color: var(--text-dark);
+}
+
+.secondary {
+  background: var(--border);
+  color: var(--text-dark);
+}
+
+.list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.list-header select {
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+.applications-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.application-card {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  /* Chaque carte est recreee a chaque rafraichissement de la liste (voir
+     loadApplications), donc cette animation rejoue a chaque fois : nouvel
+     ajout, filtre change, ou simple rechargement. */
+  animation: cardIn 0.6s ease both;
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.application-card:hover {
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.application-main {
+  flex: 1;
+}
+
+.application-main .company {
+  font-weight: 700;
+}
+
+.application-main .position {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.application-meta {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-top: 6px;
+  flex-wrap: wrap;
+}
+
+.status-badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 999px;
+  color: white;
+  background: var(--badge-color, var(--accent));
+}
+
+.application-date,
+.application-link {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.application-notes {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-top: 6px;
+  white-space: pre-wrap;
+}
+
+.application-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.application-actions button {
+  padding: 6px 10px;
+  font-size: 0.8rem;
+  background: var(--border);
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.application-actions button:hover {
+  transform: translateY(-1px) scale(1.04);
+}
+
+.application-actions .edit-btn:hover {
+  background: color-mix(in srgb, var(--accent) 20%, var(--border));
+}
+
+.application-actions .delete-btn {
+  background: #fed7d7;
+  color: #9b2c2c;
+}
+
+.application-actions .delete-btn:hover {
+  background: #fc8181;
+  color: white;
+}
+
+/* Animation de sortie d'une carte : on ajoute cette classe en JS juste
+   avant de vraiment supprimer la candidature, on attend que l'animation
+   se termine (evenement "animationend"), et seulement apres on retire
+   la carte du DOM / on appelle l'API. Sans ça, la carte disparaitrait
+   instantanement, ce qui est moins agreable a l'oeil. */
+.application-card.removing {
+  animation: cardOut 0.35s ease forwards;
+  pointer-events: none;
+}
+
+@keyframes cardOut {
+  from { opacity: 1; transform: scale(1) translateX(0); }
+  to { opacity: 0; transform: scale(0.9) translateX(30px); }
+}
+
+/* Petit "flash" sur le formulaire quand on clique Modifier, pour bien
+   montrer qu'il vient de se remplir avec les infos de la candidature. */
+.form-card.editing-flash {
+  animation: editFlash 0.6s ease;
+}
+
+@keyframes editFlash {
+  0% { box-shadow: 0 0 0 0 rgba(43, 108, 176, 0.5); }
+  100% { box-shadow: 0 0 0 12px rgba(43, 108, 176, 0); }
+}
+
+.empty-message {
+  text-align: center;
+  color: var(--text-muted);
+  padding: 30px 0;
+}
+
+.hidden {
+  display: none !important;
+}
+
+@media (max-width: 760px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+  .stats-bar {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .application-card {
+    flex-direction: column;
+  }
+  .application-actions {
+    flex-direction: row;
+  }
+}

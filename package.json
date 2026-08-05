@@ -1,0 +1,13 @@
+{
+  "name": "job-tracker",
+  "version": "1.0.0",
+  "description": "Suivi de candidatures - API REST Node.js/Express + SQLite",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}

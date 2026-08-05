@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Job Tracker — Suivi de candidatures</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <header class="app-header">
+      <h1>💼 Job Tracker</h1>
+      <p class="subtitle">Mon outil de recherche d'emploi</p>
+    </header>
+
+    <section class="stats-band">
+      <!-- La barre (segments colorés) et la légende sont générées en JS,
+           dans loadStats() : on ne sait à l'avance ni combien de statuts
+           auront des candidatures, ni leurs proportions. -->
+      <div class="stats-bar-track" id="stats-bar-track"></div>
+      <div class="stats-legend" id="stats-legend"></div>
+    </section>
+
+    <main class="layout">
+      <section class="form-card" id="form-card">
+        <h2 id="form-title">Nouvelle candidature</h2>
+        <form id="application-form">
+          <input type="hidden" id="application-id">
+
+          <label for="company">Entreprise *</label>
+          <input type="text" id="company" required placeholder="Ex : Doctolib">
+
+          <label for="position">Poste *</label>
+          <input type="text" id="position" required placeholder="Ex : Développeur Full Stack Junior">
+
+          <label for="status">Statut</label>
+          <select id="status">
+            <option value="A postuler">À postuler</option>
+            <option value="Envoyee">Envoyée</option>
+            <option value="Entretien">Entretien</option>
+            <option value="Refusee">Refusée</option>
+            <option value="Offre">Offre</option>
+          </select>
+
+          <label for="date_applied">Date</label>
+          <input type="date" id="date_applied">
+
+          <label for="url">Lien de l'offre</label>
+          <input type="url" id="url" placeholder="https://...">
+
+          <label for="notes">Notes</label>
+          <textarea id="notes" rows="3" placeholder="Contact RH, prochaine étape..."></textarea>
+
+          <div class="form-actions">
+            <button type="submit" id="submit-btn">Ajouter</button>
+            <button type="button" id="cancel-edit-btn" class="secondary hidden">Annuler</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="list-card">
+        <div class="list-header">
+          <h2>Candidatures</h2>
+          <select id="filter-status">
+            <option value="">Toutes</option>
+            <option value="A postuler">À postuler</option>
+            <option value="Envoyee">Envoyée</option>
+            <option value="Entretien">Entretien</option>
+            <option value="Refusee">Refusée</option>
+            <option value="Offre">Offre</option>
+          </select>
+        </div>
+        <div id="applications-list" class="applications-list"></div>
+        <p id="empty-message" class="empty-message hidden">Aucune candidature pour l'instant. Ajoute la première !</p>
+      </section>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
